@@ -1,52 +1,35 @@
 import {
   NavigationContainer,
-  DefaultTheme,
-  DarkTheme,
+  DarkTheme as NavigationDarkTheme,
+  DefaultTheme as NavigationDefaultTheme,
 } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import * as React from 'react';
-import { Switch } from 'react-native';
-import AppContext from '../context/AppContext';
+import {
+  DarkTheme as PaperDarkTheme,
+  DefaultTheme as PaperDefaultTheme,
+  Provider as PaperProvider,
+} from 'react-native-paper';
+import merge from 'deepmerge';
 import useColorScheme from '../hooks/useColorScheme';
 
 import NotFoundScreen from '../screens/NotFoundScreen';
 import { RootStackParamList } from '../types';
 import BottomTabNavigator from './BottomTabNavigator';
 import LinkingConfiguration from './LinkingConfiguration';
-import { Text } from '../components/Themed';
-import { expo } from '../app.json';
+import CustomNavigationBar from './CustomNavigationBar';
+
+const CombinedDefaultTheme = merge(PaperDefaultTheme, NavigationDefaultTheme);
+const CombinedDarkTheme = merge(PaperDarkTheme, NavigationDarkTheme);
 
 // A root stack navigator is often used for displaying modals on top of all other content
 // Read more here: https://reactnavigation.org/docs/modal
 const Stack = createStackNavigator<RootStackParamList>();
 
 function RootNavigator() {
-  const { isDarkTheme, setIsDarkTheme } = React.useContext(AppContext);
-  const toggleDarkTheme = () => setIsDarkTheme(previousState => !previousState);
   return (
     <Stack.Navigator
-      screenOptions={{
-        title: `${expo.name} v${expo.version}`,
-        headerRight: ({ tintColor }) => (
-          <>
-            <Text
-              style={{ padding: 10, fontSize: 20 }}
-              onPress={toggleDarkTheme}
-            >
-              {isDarkTheme ? '🌞' : '🌛'}
-            </Text>
-            <Switch
-              thumbColor={tintColor}
-              value={isDarkTheme}
-              onValueChange={toggleDarkTheme}
-            />
-          </>
-        ),
-        headerRightContainerStyle: {
-          flexDirection: 'row',
-          alignItems: 'center',
-        },
-      }}
+      screenOptions={{ header: props => <CustomNavigationBar {...props} /> }}
     >
       <Stack.Screen name="Root" component={BottomTabNavigator} />
       <Stack.Screen
@@ -63,11 +46,17 @@ function RootNavigator() {
 export default function Navigation() {
   const colorScheme = useColorScheme();
   return (
-    <NavigationContainer
-      linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}
+    <PaperProvider
+      theme={colorScheme === 'dark' ? CombinedDarkTheme : CombinedDefaultTheme}
     >
-      <RootNavigator />
-    </NavigationContainer>
+      <NavigationContainer
+        linking={LinkingConfiguration}
+        theme={
+          colorScheme === 'dark' ? CombinedDarkTheme : CombinedDefaultTheme
+        }
+      >
+        <RootNavigator />
+      </NavigationContainer>
+    </PaperProvider>
   );
 }
