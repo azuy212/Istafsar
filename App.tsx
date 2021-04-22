@@ -1,10 +1,9 @@
+import { AppContextProvider } from '@context/AppContext';
+import useCachedResources from '@hooks/useCachedResources';
+import Navigation from '@navigation/index';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { AppContextProvider } from './context/AppContext';
-
-import useCachedResources from './hooks/useCachedResources';
-import Navigation from './navigation';
 
 export default function App() {
   const isLoadingComplete = useCachedResources();
@@ -13,11 +12,11 @@ export default function App() {
     return null;
   }
   return (
-    <AppContextProvider>
-      <SafeAreaProvider>
+    <SafeAreaProvider>
+      <AppContextProvider>
         <Navigation />
         <StatusBar />
-      </SafeAreaProvider>
-    </AppContextProvider>
+      </AppContextProvider>
+    </SafeAreaProvider>
   );
 }
