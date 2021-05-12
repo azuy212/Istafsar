@@ -1,0 +1,28 @@
+import * as Linking from 'expo-linking';
+
+export default {
+  prefixes: [Linking.createURL('/')],
+  config: {
+    screens: {
+      Root: {
+        screens: {
+          Home: {
+            screens: {
+              TabOne: {
+                screens: {
+                  TabOneScreen: 'one',
+                },
+              },
+              TabTwo: {
+                screens: {
+                  TabTwoScreen: 'two',
+                },
+              },
+            },
+          },
+        },
+      },
+      NotFound: '*',
+    },
+  },
+};
