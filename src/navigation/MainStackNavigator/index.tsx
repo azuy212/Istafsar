@@ -1,7 +1,7 @@
 import { MainStackParamList } from '@navigation/types';
 import { createStackNavigator } from '@react-navigation/stack';
 import NotFoundScreen from '@screens/NotFoundScreen';
-import TabOneScreen from '@screens/TabOneScreen';
+import QuestionList from '@screens/QuestionList/index';
 import React from 'react';
 import StackHeader from './StackHeader';
 
@@ -12,7 +12,7 @@ export default function MainStackNavigator() {
     <Stack.Navigator
       screenOptions={{ header: props => <StackHeader {...props} /> }}
     >
-      <Stack.Screen name="Home" component={TabOneScreen} />
+      <Stack.Screen name="Home" component={QuestionList} />
       <Stack.Screen
         name="NotFound"
         component={NotFoundScreen}
